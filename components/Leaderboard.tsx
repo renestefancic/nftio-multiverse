@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { MOCK_LEADERBOARD } from '../constants';
 import { Trophy } from 'lucide-react';
 
 export const Leaderboard: React.FC = () => {
   return (
-    <div className="glass-panel rounded-2xl overflow-hidden flex flex-col h-full">
+    <div className="glass-panel rounded-2xl overflow-hidden flex flex-col pb-2">
       <div className="h-14 px-4 border-b border-white/5 bg-brand-surface/50 flex justify-between items-center backdrop-blur-md">
         <h3 className="font-bold text-sm uppercase tracking-wider text-gray-300 flex items-center gap-2">
           <Trophy className="w-4 h-4 text-brand-gold" />

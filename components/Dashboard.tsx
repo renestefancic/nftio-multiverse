@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { GAMES, MOCK_PLAYER_PROGRESS } from '../constants';
 import { Leaderboard } from './Leaderboard';
@@ -131,7 +130,7 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="pt-48 pb-20 px-4 md:px-6 max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="pt-48 pb-40 px-4 md:px-6 max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         
@@ -405,9 +404,9 @@ export const Dashboard: React.FC = () => {
              </h2>
            </div>
            
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
-              <div className="lg:col-span-2 h-full">
-                 <div className="h-full">
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                 <div>
                   <Leaderboard />
                  </div>
               </div>

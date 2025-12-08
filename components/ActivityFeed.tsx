@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { GAMES } from '../constants';
 import { Zap, ArrowRight } from 'lucide-react';
@@ -17,7 +16,7 @@ export const ActivityFeed: React.FC = () => {
   const getGame = (id: string) => GAMES.find(g => g.id === id);
 
   return (
-    <div className="glass-panel rounded-2xl overflow-hidden flex flex-col h-full">
+    <div className="glass-panel rounded-2xl overflow-hidden flex flex-col h-full pb-2">
       <div className="h-14 px-4 border-b border-white/5 bg-brand-surface/50 flex justify-between items-center backdrop-blur-md">
         <h3 className="font-bold text-sm uppercase tracking-wider text-gray-300 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
