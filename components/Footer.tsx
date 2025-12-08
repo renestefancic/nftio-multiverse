@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#020204] border-t border-white/5 py-12 px-4 md:px-8 text-sm relative z-10">
+    <footer className="bg-brand-black border-t border-brand-surface py-12 px-4 md:px-8 text-sm relative z-10 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-12">
         
         {/* FAQ Section */}

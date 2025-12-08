@@ -1,12 +1,13 @@
-
 import React from 'react';
-import { Flame } from 'lucide-react';
+import { Flame, Sun, Moon } from 'lucide-react';
 
 interface CampaignHeaderProps {
   isWalletConnected: boolean;
+  theme: string;
+  onToggleTheme: () => void;
 }
 
-export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnected }) => {
+export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnected, theme, onToggleTheme }) => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -30,7 +31,7 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnecte
           </div>
         </div>
 
-        {/* Local Navigation Anchors */}
+        {/* Local Navigation Anchors & Theme Toggle */}
         <div className="flex items-center gap-1 sm:gap-6">
           {isWalletConnected && (
              <button 
@@ -63,6 +64,16 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnecte
                How it Works
              </button>
           )}
+
+          <div className="h-4 w-px bg-white/10 mx-2"></div>
+
+          <button
+            onClick={onToggleTheme}
+            className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
         </div>
 
       </div>

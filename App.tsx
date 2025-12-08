@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hero } from './components/Hero';
 import { Roadmap } from './components/Roadmap';
 import { Mechanics } from './components/Mechanics';
@@ -12,6 +11,15 @@ import { Search, Menu, X } from 'lucide-react';
 const App: React.FC = () => {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState('dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   const handleConnect = () => {
     // Simulate connection delay
@@ -21,10 +29,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans selection:bg-brand-secondary selection:text-white">
+    <div className="min-h-screen font-sans selection:bg-brand-secondary selection:text-white transition-colors duration-300">
       
       {/* Sticky Navigation - NFT.io Style */}
-      <nav className="fixed top-0 left-0 right-0 z-50 h-[80px] bg-[#040D21]/90 backdrop-blur-xl border-b border-brand-surface transition-all duration-300">
+      <nav className="fixed top-0 left-0 right-0 z-50 h-[80px] bg-brand-black/90 backdrop-blur-xl border-b border-brand-surface transition-all duration-300">
         <div className="max-w-[1600px] mx-auto px-6 h-full flex justify-between items-center gap-8">
           
           {/* Left: Logo & Search */}
@@ -90,7 +98,7 @@ const App: React.FC = () => {
         
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
-           <div className="md:hidden absolute top-[80px] left-0 right-0 bg-brand-black border-b border-brand-surface p-6 flex flex-col gap-4 animate-in slide-in-from-top-4">
+           <div className="md:hidden absolute top-[80px] left-0 right-0 bg-brand-black border-b border-brand-surface p-6 flex flex-col gap-4 animate-in slide-in-from-top-4 shadow-xl">
               <div className="flex items-center bg-brand-dark border border-brand-surface rounded-xl px-4 py-3">
                 <Search className="w-4 h-4 text-gray-400 mr-3" />
                 <input type="text" placeholder="Search..." className="bg-transparent w-full text-white text-sm outline-none" />
@@ -102,7 +110,11 @@ const App: React.FC = () => {
         )}
       </nav>
 
-      <CampaignHeader isWalletConnected={isWalletConnected} />
+      <CampaignHeader 
+        isWalletConnected={isWalletConnected} 
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
 
       <main>
         {isWalletConnected ? (

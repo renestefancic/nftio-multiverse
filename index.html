@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,15 +11,25 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Manrope', 'sans-serif'],
+              sans: ['Hauora', 'sans-serif'],
+              display: ['Hauora', 'sans-serif'],
             },
             colors: {
+              // Override base colors to use CSS variables for theming
+              white: 'rgb(var(--color-text-base) / <alpha-value>)',
+              black: 'rgb(var(--color-bg-base) / <alpha-value>)',
+              gray: {
+                300: 'rgb(var(--color-text-muted) / <alpha-value>)',
+                400: 'rgb(var(--color-text-muted) / <alpha-value>)',
+                500: 'rgb(var(--color-text-muted-dark) / <alpha-value>)',
+                600: 'rgb(var(--color-text-muted-dark) / <alpha-value>)',
+              },
               brand: {
-                black: '#040D21', // NFT.io Deep Space
-                dark: '#0B162C',  // Panel Backgrounds
-                gray: '#15203B',  // Lighter Panels
-                surface: '#1F2D4D', // Borders/Inputs
+                black: 'rgb(var(--color-brand-black) / <alpha-value>)', // Main BG
+                dark: 'rgb(var(--color-brand-dark) / <alpha-value>)',   // Panel BG
+                gray: 'rgb(var(--color-brand-gray) / <alpha-value>)',   // Lighter Panels
+                surface: 'rgb(var(--color-brand-surface) / <alpha-value>)', // Borders/Inputs
+                
                 primary: '#7835E5', // NFT.io Purple
                 secondary: '#E61F9D', // NFT.io Pink
                 accent: '#00C2FF', // Cyan Accent
@@ -30,7 +40,7 @@
               }
             },
             backgroundImage: {
-              'grid-pattern': "linear-gradient(to right, #15203B 1px, transparent 1px), linear-gradient(to bottom, #15203B 1px, transparent 1px)",
+              'grid-pattern': "linear-gradient(to right, rgb(var(--color-brand-gray) / 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--color-brand-gray) / 0.1) 1px, transparent 1px)",
               'nft-gradient': "linear-gradient(90deg, #7835E5 0%, #E61F9D 100%)",
               'nft-gradient-hover': "linear-gradient(90deg, #8A4EF7 0%, #F530B5 100%)",
             },
@@ -42,6 +52,7 @@
               'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'blob-morph': 'blob-morph 10s ease-in-out infinite',
               'glitch': 'glitch 1s linear infinite',
+              'ember-rise': 'ember-rise 4s ease-in infinite',
             },
             keyframes: {
               float: {
@@ -61,6 +72,11 @@
                 '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
                 '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
                 '62%': { transform: 'translate(0,0) skew(5deg)' },
+              },
+              'ember-rise': {
+                '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
+                '20%': { opacity: '0.6' },
+                '100%': { transform: 'translateY(-100px) scale(0)', opacity: '0' },
               }
             }
           }
@@ -68,19 +84,52 @@
       }
     </script>
     <style>
-      body {
-        background-color: #040D21;
-        color: #FFFFFF;
-        /* Deep space radial gradient matching NFT.io style */
-        background-image: radial-gradient(circle at 50% 0%, #121E38 0%, #040D21 60%);
-        min-height: 100vh;
+      :root {
+        /* Dark Mode (Default) */
+        --color-brand-black: 4 13 33;       /* #040D21 */
+        --color-brand-dark: 11 22 44;       /* #0B162C */
+        --color-brand-gray: 21 32 59;       /* #15203B */
+        --color-brand-surface: 31 45 77;    /* #1F2D4D */
+        
+        --color-text-base: 255 255 255;     /* White */
+        --color-text-muted: 156 163 175;    /* Gray 400 */
+        --color-text-muted-dark: 107 114 128; /* Gray 500 */
+        --color-bg-base: 0 0 0;             /* Black */
       }
+
+      [data-theme='light'] {
+        /* Light Mode */
+        --color-brand-black: 248 250 252;   /* Slate 50 */
+        --color-brand-dark: 255 255 255;    /* White */
+        --color-brand-gray: 241 245 249;    /* Slate 100 */
+        --color-brand-surface: 203 213 225; /* Slate 300 */
+        
+        --color-text-base: 15 23 42;        /* Slate 900 */
+        --color-text-muted: 71 85 105;      /* Slate 600 */
+        --color-text-muted-dark: 100 116 139; /* Slate 500 */
+        --color-bg-base: 255 255 255;       /* White */
+      }
+
+      body {
+        background-color: rgb(var(--color-brand-black));
+        color: rgb(var(--color-text-base));
+        /* Only apply radial gradient in dark mode for that deep space feel */
+        background-image: radial-gradient(circle at 50% 0%, rgba(18, 30, 56, 1) 0%, rgba(var(--color-brand-black), 1) 60%);
+        min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      [data-theme='light'] body {
+        background-image: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F1F5F9 60%);
+      }
+
       .glass-panel {
-        background: rgba(11, 22, 44, 0.6);
+        background: rgba(var(--color-brand-dark), 0.6);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(var(--color-text-base), 0.08);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
       }
       .text-glow {
         text-shadow: 0 0 30px rgba(120, 53, 229, 0.5);
@@ -93,10 +142,10 @@
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #040D21;
+        background: rgb(var(--color-brand-black));
       }
       ::-webkit-scrollbar-thumb {
-        background: #1F2D4D;
+        background: rgb(var(--color-brand-surface));
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
