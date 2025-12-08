@@ -10,7 +10,7 @@ export const SEASONS: Season[] = [
     dateRange: 'Jan 16 - Mar 31',
     color: 'text-orange-500',
     accent: 'border-orange-500 shadow-[0_0_30px_rgba(255,85,0,0.15)]',
-    highlights: ['Magma Blob', 'Eternal Embers', 'Emberborne Degen']
+    highlights: ['Magma Blob', 'Eternal Embers', 'Infernal Degen']
   },
   { 
     id: 'q2', 
@@ -82,8 +82,8 @@ export const GAMES: Game[] = [
     objectives: [
       { id: 'o1', title: 'Craft a Fire Sword', description: 'Forge a weapon using Ember Steel.', points: 50, isCompleted: true, ctaText: 'Craft' },
       { id: 'o2', title: 'Slay 10 Goblins', description: 'Defeat 10 Goblin enemies in the Dark Forest.', points: 20, isCompleted: true, ctaText: 'Hunt' },
-      { id: 'o3', title: 'Complete Epic Raid', description: 'Participate in the Molten Core raid.', points: 100, isCompleted: false, ctaText: 'Join Raid' },
-      { id: 'o4', title: 'Trade 5 Items', description: 'Sell or trade items on the marketplace.', points: 9, isCompleted: false, ctaText: 'Trade' },
+      { id: 'o3', title: 'Complete Epic Raid', description: 'Participate in the Molten Core raid.', points: 100, isCompleted: true, ctaText: 'Join Raid' },
+      { id: 'o4', title: 'Trade 5 Items', description: 'Sell or trade items on the marketplace.', points: 9, isCompleted: true, ctaText: 'Trade' },
       { id: 'o5', title: 'Visit Capital City', description: 'Discover the main hub.', points: 1, isCompleted: true, ctaText: 'Travel' }
     ]
   },
@@ -119,8 +119,8 @@ export const GAMES: Game[] = [
 
 export const MOCK_PLAYER_PROGRESS: PlayerProgress[] = [
   { gameId: 'g1', currentEssence: 30, maxEssence: 180, isMastered: false }, // Etherscape
-  { gameId: 'g2', currentEssence: 120, maxEssence: 180, isMastered: false }, // Lost Relics
-  { gameId: 'g3', currentEssence: 71, maxEssence: 180, isMastered: false }, // Six Dragons
+  { gameId: 'g2', currentEssence: 89, maxEssence: 180, isMastered: false }, // Lost Relics - Updated to 89 to keep total under 300
+  { gameId: 'g3', currentEssence: 180, maxEssence: 180, isMastered: true }, // Six Dragons - MASTERED
   { gameId: 'g4', currentEssence: 0, maxEssence: 180, isMastered: false }, // Excavators
   { gameId: 'g5', currentEssence: 0, maxEssence: 180, isMastered: false }, // Into Multiverse
 ];
@@ -135,7 +135,7 @@ export const MOCK_LEADERBOARD: LeaderboardEntry[] = [
   { rank: 7, address: '0xe1...5d4', gamesPlayed: 3, totalEssence: 450 },
   { rank: 8, address: '0x7b...9e2', gamesPlayed: 2, totalEssence: 390 },
   { rank: 9, address: '0x5c...3f1', gamesPlayed: 2, totalEssence: 360 },
-  { rank: 42, address: 'You', gamesPlayed: 3, totalEssence: 221, isCurrentUser: true },
+  { rank: 42, address: 'You', gamesPlayed: 3, totalEssence: 299, isCurrentUser: true }, // Updated total score (180+30+89)
 ];
 
 export const REWARDS: Reward[] = [
@@ -169,7 +169,7 @@ export const REWARDS: Reward[] = [
     type: 'Artifact',
     image: '',
     description: 'Rare multiverse item. 5% of top players.',
-    condition: 'Raffle (Min 10 Essence)'
+    condition: 'Draw (Min 10 Essence)'
   },
   {
     id: 'r5',
@@ -177,6 +177,6 @@ export const REWARDS: Reward[] = [
     type: 'Jackpot',
     image: '',
     description: '1 of 1 Unique Season Avatar.',
-    condition: 'Raffle (Min 10 Essence)'
+    condition: 'Draw (Min 10 Essence)'
   }
 ];

@@ -58,6 +58,15 @@ export const Dashboard: React.FC = () => {
   const totalEssence = MOCK_PLAYER_PROGRESS.reduce((acc, curr) => acc + curr.currentEssence, 0);
   const gamesWithProgress = MOCK_PLAYER_PROGRESS.filter(p => p.currentEssence > 0).length;
 
+  // Sorting Games: Active/Incomplete first, Mastered last
+  const sortedGames = [...GAMES].sort((a, b) => {
+    const progressA = MOCK_PLAYER_PROGRESS.find(p => p.gameId === a.id);
+    const progressB = MOCK_PLAYER_PROGRESS.find(p => p.gameId === b.id);
+    const masteredA = progressA?.isMastered ? 1 : 0;
+    const masteredB = progressB?.isMastered ? 1 : 0;
+    return masteredA - masteredB;
+  });
+
   const toggleGame = (id: string) => {
     setExpandedGameId(expandedGameId === id ? null : id);
   };
@@ -94,14 +103,14 @@ export const Dashboard: React.FC = () => {
           secondaryTarget: 2,
           label: 'Legendary Magma Blob' 
         };
-      case 'MULTIVERSE_ITEM': // Raffle, min 10 pts
+      case 'MULTIVERSE_ITEM': // Draw, min 10 pts
         return { 
           unlocked: totalEssence >= 10, 
           progress: totalEssence, 
           target: 10, 
           label: 'Eternal Embers' 
         };
-      case 'DEGEN_NFT': // Raffle, min 10 pts
+      case 'DEGEN_NFT': // Draw, min 10 pts
         return { 
           unlocked: totalEssence >= 10, 
           progress: totalEssence, 
@@ -122,13 +131,13 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="pt-32 pb-12 px-4 md:px-6 max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+    <div className="pt-48 pb-20 px-4 md:px-6 max-w-[1600px] mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         
         {/* --- LEFT COLUMN: STICKY SIDEBAR (Profile + Rewards) --- */}
-        {/* Added z-40 to ensure tooltips from this column render ON TOP of the right column */}
-        <div className="lg:col-span-1 space-y-4 lg:sticky lg:top-24 z-40">
+        {/* Adjusted top position to account for double navbar (80px + 60px + margin) */}
+        <div className="lg:col-span-1 space-y-4 lg:sticky lg:top-40 z-40">
           
           {/* 1. Identity Card */}
           <div className="glass-panel rounded-2xl p-5 relative overflow-hidden group flex flex-col items-center text-center border-brand-surface bg-brand-dark/40">
@@ -271,7 +280,7 @@ export const Dashboard: React.FC = () => {
                 </h2>
               </div>
               <div className="space-y-4">
-                {GAMES.map((game) => {
+                {sortedGames.map((game) => {
                   const progress = MOCK_PLAYER_PROGRESS.find(p => p.gameId === game.id);
                   const percent = progress ? (progress.currentEssence / progress.maxEssence) * 100 : 0;
                   const isMastered = progress?.isMastered;
@@ -282,7 +291,7 @@ export const Dashboard: React.FC = () => {
                       key={game.id} 
                       className={`relative rounded-xl border transition-all duration-300 overflow-hidden ${
                         isMastered 
-                          ? 'bg-brand-dark/80 border-brand-gold/30' 
+                          ? 'bg-black/20 border-brand-secondary/20 opacity-75 grayscale-[0.3]' // Muted completed state
                           : isExpanded 
                             ? 'bg-brand-gray border-brand-primary/50 shadow-lg shadow-brand-primary/5' 
                             : 'bg-brand-dark border-brand-surface hover:border-brand-primary/30'
@@ -294,11 +303,15 @@ export const Dashboard: React.FC = () => {
                         className="p-4 cursor-pointer flex items-center justify-between gap-4"
                       >
                          <div className="flex items-center gap-4 flex-1">
-                            <img src={game.coverImage} alt={game.name} className="w-12 h-12 rounded-lg object-cover ring-1 ring-white/10" />
+                            <img 
+                              src={game.coverImage} 
+                              alt={game.name} 
+                              className={`w-12 h-12 rounded-lg object-cover ring-1 ${isMastered ? 'ring-brand-secondary/30 grayscale' : 'ring-white/10'}`} 
+                            />
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
-                                <h3 className="font-bold text-white text-base">{game.name}</h3>
-                                {isMastered && <Check className="w-4 h-4 text-brand-gold" />}
+                                <h3 className={`font-bold text-base ${isMastered ? 'text-gray-300' : 'text-white'}`}>{game.name}</h3>
+                                {isMastered && <Check className="w-4 h-4 text-brand-secondary" />}
                                 {game.guideUrl && (
                                   <a 
                                     href={game.guideUrl} 
@@ -315,11 +328,11 @@ export const Dashboard: React.FC = () => {
                               <div className="flex items-center gap-3 mt-2">
                                 <div className="h-2 w-24 sm:w-32 bg-brand-black rounded-full overflow-hidden">
                                   <div 
-                                    className={`h-full transition-all duration-500 ${isMastered ? 'bg-brand-gold' : 'bg-nft-gradient'}`}
+                                    className={`h-full transition-all duration-500 ${isMastered ? 'bg-brand-secondary/70' : 'bg-nft-gradient'}`}
                                     style={{ width: `${percent}%` }}
                                   ></div>
                                 </div>
-                                <span className={`text-xs font-mono font-bold ${isMastered ? 'text-brand-gold' : 'text-gray-400'}`}>
+                                <span className={`text-xs font-mono font-bold ${isMastered ? 'text-brand-secondary/70' : 'text-gray-400'}`}>
                                   {progress?.currentEssence}/{progress?.maxEssence}
                                 </span>
                               </div>
@@ -328,7 +341,7 @@ export const Dashboard: React.FC = () => {
                          
                          <div className="flex items-center gap-3">
                            {isMastered ? (
-                             <button className="hidden sm:flex w-24 justify-center px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-colors items-center gap-1 bg-brand-gold/10 text-brand-gold border-brand-gold/30">
+                             <button className="hidden sm:flex w-24 justify-center px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-colors items-center gap-1 bg-brand-secondary/5 text-brand-secondary/70 border-brand-secondary/10 cursor-default">
                                Mastered
                              </button>
                            ) : (
@@ -357,7 +370,7 @@ export const Dashboard: React.FC = () => {
                                   {obj.isCompleted ? <Check className="w-3 h-3" /> : <div className="w-1.5 h-1.5 bg-gray-700 rounded-full" />}
                                 </div>
                                 <div>
-                                  <h4 className={`text-xs font-bold ${obj.isCompleted ? 'text-gray-500 line-through' : 'text-gray-400'}`}>
+                                  <h4 className={`text-xs font-bold ${obj.isCompleted ? 'text-gray-500 line-through' : 'text-white'}`}>
                                     {obj.title}
                                   </h4>
                                   <p className="text-xs text-gray-400 mt-1">{obj.description}</p>
@@ -365,8 +378,8 @@ export const Dashboard: React.FC = () => {
                               </div>
                               
                               <div className="flex items-center gap-4">
-                                <span className={`text-xs font-mono px-2 py-0.5 rounded ${obj.isCompleted ? 'bg-brand-primary/10 text-brand-primary' : 'bg-brand-dark text-gray-400'}`}>
-                                  +{obj.points}
+                                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${obj.isCompleted ? 'bg-brand-primary/10 text-brand-primary' : 'bg-brand-dark text-gray-400'}`}>
+                                  {obj.isCompleted ? obj.points : 0}/{obj.points} PTS
                                 </span>
                                 {!obj.isCompleted && (
                                   <button className="w-24 justify-center py-1.5 text-[10px] font-bold uppercase tracking-wider bg-nft-gradient text-white rounded transition-all hover:scale-105 flex items-center gap-1 group/btn shadow-lg shadow-brand-primary/20">

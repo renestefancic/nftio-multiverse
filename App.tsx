@@ -6,6 +6,7 @@ import { Mechanics } from './components/Mechanics';
 import { Dashboard } from './components/Dashboard';
 import { RewardsGallery } from './components/RewardsGallery';
 import { Footer } from './components/Footer';
+import { CampaignHeader } from './components/CampaignHeader';
 import { Search, Menu, X } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -101,6 +102,8 @@ const App: React.FC = () => {
         )}
       </nav>
 
+      <CampaignHeader isWalletConnected={isWalletConnected} />
+
       <main>
         {isWalletConnected ? (
           <Dashboard />
@@ -108,12 +111,20 @@ const App: React.FC = () => {
           <Hero onConnect={handleConnect} />
         )}
 
-        <Roadmap />
+        <div id="roadmap">
+          <Roadmap />
+        </div>
         
         {/* Only show mechanics on public view */}
-        {!isWalletConnected && <Mechanics />}
+        {!isWalletConnected && (
+          <div id="mechanics">
+            <Mechanics />
+          </div>
+        )}
         
-        <RewardsGallery />
+        <div id="rewards">
+          <RewardsGallery />
+        </div>
       </main>
 
       <Footer />

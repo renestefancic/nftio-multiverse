@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Wallet } from 'lucide-react';
 
@@ -25,7 +26,7 @@ export const Hero: React.FC<HeroProps> = ({ onConnect }) => {
   }, []);
 
   return (
-    <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-32 pb-24">
+    <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-48 pb-24">
       {/* Background FX - NFT.io Beam Style */}
       <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-brand-primary/10 blur-[140px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-brand-secondary/5 blur-[120px] rounded-full pointer-events-none"></div>
