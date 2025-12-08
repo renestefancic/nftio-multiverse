@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enjin Multiverse - Primal Forces</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Manrope', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                black: '#040D21', // NFT.io Deep Space
+                dark: '#0B162C',  // Panel Backgrounds
+                gray: '#15203B',  // Lighter Panels
+                surface: '#1F2D4D', // Borders/Inputs
+                primary: '#7835E5', // NFT.io Purple
+                secondary: '#E61F9D', // NFT.io Pink
+                accent: '#00C2FF', // Cyan Accent
+                // Seasonal Context Colors
+                orange: '#FF5500', // Fire Season Primary
+                ember: '#FF2A00', // Fire Season Secondary
+                gold: '#FFD700',
+              }
+            },
+            backgroundImage: {
+              'grid-pattern': "linear-gradient(to right, #15203B 1px, transparent 1px), linear-gradient(to bottom, #15203B 1px, transparent 1px)",
+              'nft-gradient': "linear-gradient(90deg, #7835E5 0%, #E61F9D 100%)",
+              'nft-gradient-hover': "linear-gradient(90deg, #8A4EF7 0%, #F530B5 100%)",
+            },
+            backgroundSize: {
+              'grid-pattern': '40px 40px',
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'blob-morph': 'blob-morph 10s ease-in-out infinite',
+              'glitch': 'glitch 1s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              'pulse-glow': {
+                '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgba(120, 53, 229, 0.5)' },
+                '50%': { opacity: .7, boxShadow: '0 0 10px rgba(230, 31, 157, 0.2)' },
+              },
+              'blob-morph': {
+                '0%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+                '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' },
+                '100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+              },
+              glitch: {
+                '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                '62%': { transform: 'translate(0,0) skew(5deg)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #040D21;
+        color: #FFFFFF;
+        /* Deep space radial gradient matching NFT.io style */
+        background-image: radial-gradient(circle at 50% 0%, #121E38 0%, #040D21 60%);
+        min-height: 100vh;
+      }
+      .glass-panel {
+        background: rgba(11, 22, 44, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      }
+      .text-glow {
+        text-shadow: 0 0 30px rgba(120, 53, 229, 0.5);
+      }
+      .fire-glow {
+        text-shadow: 0 0 20px rgba(255, 85, 0, 0.6);
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #040D21;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1F2D4D;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #7835E5;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
