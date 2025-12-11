@@ -20,7 +20,8 @@ export const Roadmap: React.FC<RoadmapProps> = ({ currentSeason }) => {
   };
 
   const getGradient = (element: string, isActive: boolean) => {
-    if (!isActive) return 'bg-brand-surface/30';
+    // Increased opacity for inactive cards to mask the timeline behind them
+    if (!isActive) return 'bg-brand-dark/95 backdrop-blur-md';
     switch (element) {
       case 'Fire': return 'bg-gradient-to-br from-orange-500/20 to-brand-dark';
       case 'Water': return 'bg-gradient-to-br from-blue-500/20 to-brand-dark';
@@ -90,10 +91,10 @@ export const Roadmap: React.FC<RoadmapProps> = ({ currentSeason }) => {
                     {/* Header Icon */}
                     <div className="flex justify-between items-start mb-6">
                       <div className={`
-                        w-12 h-12 rounded-xl flex items-center justify-center border shadow-lg backdrop-blur-md
+                        w-12 h-12 rounded-xl flex items-center justify-center border shadow-lg backdrop-blur-md relative z-10
                         ${isActive 
                           ? `text-brand-season-primary bg-brand-dark border-current` 
-                          : 'text-gray-500 bg-black/20 border-white/5'
+                          : 'text-gray-500 bg-brand-black border-white/5'
                         }
                       `}>
                         {isActive ? getIcon(season.element) : isLocked ? <Lock className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
