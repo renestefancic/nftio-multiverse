@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-season="Fire">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,9 +33,16 @@
                 primary: '#7835E5', // NFT.io Purple
                 secondary: '#E61F9D', // NFT.io Pink
                 accent: '#00C2FF', // Cyan Accent
-                // Seasonal Context Colors
-                orange: '#FF5500', // Fire Season Primary
-                ember: '#FF2A00', // Fire Season Secondary
+                
+                // Dynamic Season Colors
+                season: {
+                  primary: 'rgb(var(--color-season-primary) / <alpha-value>)',
+                  secondary: 'rgb(var(--color-season-secondary) / <alpha-value>)',
+                  accent: 'rgb(var(--color-season-accent) / <alpha-value>)',
+                },
+                // Legacy fallback (can remove if fully replaced, but keeping for safety)
+                orange: '#FF5500', 
+                ember: '#FF2A00',
                 gold: '#FFD700',
               }
             },
@@ -43,6 +50,7 @@
               'grid-pattern': "linear-gradient(to right, rgb(var(--color-brand-gray) / 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgb(var(--color-brand-gray) / 0.1) 1px, transparent 1px)",
               'nft-gradient': "linear-gradient(90deg, #7835E5 0%, #E61F9D 100%)",
               'nft-gradient-hover': "linear-gradient(90deg, #8A4EF7 0%, #F530B5 100%)",
+              'season-gradient': "linear-gradient(135deg, rgb(var(--color-season-primary)), rgb(var(--color-season-secondary)))",
             },
             backgroundSize: {
               'grid-pattern': '40px 40px',
@@ -53,6 +61,9 @@
               'blob-morph': 'blob-morph 10s ease-in-out infinite',
               'glitch': 'glitch 1s linear infinite',
               'ember-rise': 'ember-rise 4s ease-in infinite',
+              'bubble-rise': 'bubble-rise 6s ease-in infinite',
+              'wind-blow': 'wind-blow 3s linear infinite',
+              'dust-float': 'dust-float 10s linear infinite',
             },
             keyframes: {
               float: {
@@ -60,8 +71,8 @@
                 '50%': { transform: 'translateY(-10px)' },
               },
               'pulse-glow': {
-                '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgba(120, 53, 229, 0.5)' },
-                '50%': { opacity: .7, boxShadow: '0 0 10px rgba(230, 31, 157, 0.2)' },
+                '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgb(var(--color-season-primary) / 0.5)' },
+                '50%': { opacity: .7, boxShadow: '0 0 10px rgb(var(--color-season-secondary) / 0.2)' },
               },
               'blob-morph': {
                 '0%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
@@ -77,6 +88,23 @@
                 '0%': { transform: 'translateY(0) scale(1)', opacity: '0' },
                 '20%': { opacity: '0.6' },
                 '100%': { transform: 'translateY(-100px) scale(0)', opacity: '0' },
+              },
+              'bubble-rise': {
+                '0%': { transform: 'translateY(0) translateX(0)', opacity: '0' },
+                '20%': { opacity: '0.5' },
+                '50%': { transform: 'translateY(-50px) translateX(10px)' },
+                '100%': { transform: 'translateY(-120px) translateX(-10px)', opacity: '0' },
+              },
+              'wind-blow': {
+                '0%': { transform: 'translateX(-100px) skewX(-20deg)', opacity: '0' },
+                '50%': { opacity: '0.4' },
+                '100%': { transform: 'translateX(200px) skewX(-20deg)', opacity: '0' },
+              },
+              'dust-float': {
+                '0%': { transform: 'translate(0, 0) rotate(0deg)', opacity: '0' },
+                '20%': { opacity: '0.4' },
+                '80%': { opacity: '0.4' },
+                '100%': { transform: 'translate(20px, 40px) rotate(180deg)', opacity: '0' },
               }
             }
           }
@@ -95,6 +123,30 @@
         --color-text-muted: 156 163 175;    /* Gray 400 */
         --color-text-muted-dark: 107 114 128; /* Gray 500 */
         --color-bg-base: 0 0 0;             /* Black */
+
+        /* Default Season (Fire) */
+        --color-season-primary: 255 85 0;       /* #FF5500 */
+        --color-season-secondary: 255 42 0;     /* #FF2A00 */
+        --color-season-accent: 255 215 0;       /* #FFD700 */
+      }
+
+      /* Season Themes */
+      [data-season='Water'] {
+        --color-season-primary: 0 194 255;      /* #00C2FF */
+        --color-season-secondary: 0 85 255;     /* #0055FF */
+        --color-season-accent: 56 189 248;      /* Sky Blue */
+      }
+
+      [data-season='Wind'] {
+        --color-season-primary: 20 184 166;     /* Teal-500 */
+        --color-season-secondary: 203 213 225;  /* Slate-300 */
+        --color-season-accent: 255 255 255;     /* White */
+      }
+
+      [data-season='Earth'] {
+        --color-season-primary: 16 185 129;     /* Emerald-500 */
+        --color-season-secondary: 132 204 22;   /* Lime-500 */
+        --color-season-accent: 251 191 36;      /* Amber-400 */
       }
 
       [data-theme='light'] {
@@ -134,8 +186,8 @@
       .text-glow {
         text-shadow: 0 0 30px rgba(120, 53, 229, 0.5);
       }
-      .fire-glow {
-        text-shadow: 0 0 20px rgba(255, 85, 0, 0.6);
+      .season-glow {
+        text-shadow: 0 0 20px rgb(var(--color-season-primary) / 0.6);
       }
       /* Custom scrollbar */
       ::-webkit-scrollbar {

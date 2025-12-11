@@ -1,17 +1,35 @@
 import React from 'react';
-import { Flame, Sun, Moon } from 'lucide-react';
+import { Flame, Droplets, Wind, Mountain, Sun, Moon } from 'lucide-react';
+import { SeasonType } from '../App';
 
 interface CampaignHeaderProps {
   isWalletConnected: boolean;
   theme: string;
   onToggleTheme: () => void;
+  currentSeason: SeasonType;
+  onSetSeason: (season: SeasonType) => void;
 }
 
-export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnected, theme, onToggleTheme }) => {
+export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ 
+  isWalletConnected, 
+  theme, 
+  onToggleTheme,
+  currentSeason,
+  onSetSeason
+}) => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const getSeasonIcon = () => {
+    switch (currentSeason) {
+      case 'Fire': return <Flame className="w-3 h-3 text-brand-season-primary fill-brand-season-primary" />;
+      case 'Water': return <Droplets className="w-3 h-3 text-brand-season-primary fill-brand-season-primary" />;
+      case 'Wind': return <Wind className="w-3 h-3 text-brand-season-primary" />;
+      case 'Earth': return <Mountain className="w-3 h-3 text-brand-season-primary fill-brand-season-primary" />;
     }
   };
 
@@ -21,13 +39,13 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnecte
         
         {/* Campaign Identity */}
         <div className="flex items-center gap-4">
-          <h1 className="text-xl md:text-2xl font-display font-extrabold tracking-tight uppercase text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 drop-shadow-sm">
+          <h1 className="hidden md:block text-xl md:text-2xl font-display font-extrabold tracking-tight uppercase text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 drop-shadow-sm">
             THE MULTIVERSE
           </h1>
           
-          <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded bg-brand-orange/10 border border-brand-orange/20">
-             <Flame className="w-3 h-3 text-brand-orange fill-brand-orange" />
-             <span className="text-[10px] font-bold text-brand-orange uppercase tracking-wider">Season 1: Fire</span>
+          <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded bg-brand-season-primary/10 border border-brand-season-primary/20">
+             {getSeasonIcon()}
+             <span className="text-[10px] font-bold text-brand-season-primary uppercase tracking-wider">Season: {currentSeason}</span>
           </div>
         </div>
 
@@ -64,6 +82,23 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ isWalletConnecte
                How it Works
              </button>
           )}
+
+          <div className="h-4 w-px bg-white/10 mx-2"></div>
+          
+          {/* Dev: Season Selector */}
+           <div className="flex items-center gap-2">
+              <span className="text-[9px] font-mono text-gray-600 hidden lg:block">DEV:</span>
+              <select 
+                value={currentSeason}
+                onChange={(e) => onSetSeason(e.target.value as SeasonType)}
+                className="bg-black/20 text-white text-[10px] font-bold uppercase rounded border border-white/10 px-2 py-1 outline-none focus:border-brand-season-primary"
+              >
+                <option value="Fire">Fire</option>
+                <option value="Water">Water</option>
+                <option value="Wind">Wind</option>
+                <option value="Earth">Earth</option>
+              </select>
+           </div>
 
           <div className="h-4 w-px bg-white/10 mx-2"></div>
 

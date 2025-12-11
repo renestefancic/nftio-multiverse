@@ -1,32 +1,48 @@
-
 import React from 'react';
 import { REWARDS } from '../constants';
 import { Lock } from 'lucide-react';
+import { SeasonType } from '../App';
 
-export const RewardsGallery: React.FC = () => {
+interface RewardsGalleryProps {
+  currentSeason: SeasonType;
+}
+
+export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason }) => {
   
-  const renderAsset = (reward: any) => {
-    // Helper for specific blob styles
-    const getBlobStyle = (tier: string) => {
-        if (tier.includes('Legendary')) return { color1: '#FFD700', color2: '#800080', glow: '#FFD700', speed: '3s' };
-        if (tier.includes('Epic')) return { color1: '#FF4500', color2: '#8B0000', glow: '#FF4500', speed: '4s' };
-        return { color1: '#FFD700', color2: '#FF4500', glow: '#FF5500', speed: '6s' };
-    };
+  const getSeasonColors = (type: string) => {
+    // Map season to hex colors for SVG gradients
+    const colors = {
+      Fire: { primary: '#FF5500', secondary: '#FF2A00', accent: '#FFD700', dark: '#8B0000' },
+      Water: { primary: '#00C2FF', secondary: '#0055FF', accent: '#38BDF8', dark: '#00008B' },
+      Wind: { primary: '#2DD4BF', secondary: '#0F766E', accent: '#FFFFFF', dark: '#134E4A' },
+      Earth: { primary: '#10B981', secondary: '#15803D', accent: '#FBBF24', dark: '#064E3B' },
+    }[currentSeason];
 
+    if (type === 'Legendary') return { color1: colors.accent, color2: 'purple', glow: colors.accent, speed: '3s' };
+    if (type === 'Epic') return { color1: colors.primary, color2: colors.dark, glow: colors.primary, speed: '4s' };
+    return { color1: colors.accent, color2: colors.primary, glow: colors.secondary, speed: '6s' };
+  };
+
+  const renderAsset = (reward: any) => {
     if (reward.name.includes('Blob')) {
-        const style = getBlobStyle(reward.name);
+        let type = 'Standard';
+        if (reward.name.includes('Legendary')) type = 'Legendary';
+        else if (reward.name.includes('Epic')) type = 'Epic';
+
+        const style = getSeasonColors(type);
+
         return (
             <div className="w-full h-full flex items-center justify-center relative group-hover:scale-110 transition-transform duration-500">
                 <div className="absolute inset-0 blur-3xl rounded-full opacity-40 group-hover:opacity-70 transition-opacity" style={{ backgroundColor: style.glow }}></div>
                 <svg viewBox="0 0 200 200" className="w-56 h-56" style={{ filter: `drop-shadow(0 0 20px ${style.glow}80)` }}>
                 <defs>
-                    <radialGradient id={`blobGradient-${reward.id}`} cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
+                    <radialGradient id={`blobGradient-${reward.id}-${currentSeason}`} cx="50%" cy="50%" r="50%" fx="35%" fy="35%">
                     <stop offset="0%" stopColor={style.color1} />
                     <stop offset="100%" stopColor={style.color2} />
                     </radialGradient>
                 </defs>
                 <g className="animate-float">
-                    <path fill={`url(#blobGradient-${reward.id})`}>
+                    <path fill={`url(#blobGradient-${reward.id}-${currentSeason})`}>
                     <animate attributeName="d" dur={style.speed} repeatCount="indefinite" values="
                         M100 30 C150 30 180 70 180 100 C180 140 150 170 100 170 C50 170 20 140 20 100 C20 60 50 30 100 30 Z;
                         M100 25 C160 40 190 80 170 120 C160 160 130 175 90 170 C40 160 15 120 30 80 C40 40 60 25 100 25 Z;
@@ -115,8 +131,8 @@ export const RewardsGallery: React.FC = () => {
   };
 
   const getRarityColor = (reward: any) => {
-    if (reward.name.includes('Legendary') || reward.type === 'Jackpot') return 'border-brand-orange/20 hover:border-brand-orange/60 shadow-[0_0_20px_rgba(255,85,0,0.1)] hover:shadow-[0_0_30px_rgba(255,85,0,0.3)]';
-    if (reward.name.includes('Epic') || reward.type === 'Artifact') return 'border-brand-secondary/20 hover:border-brand-secondary/60 shadow-[0_0_20px_rgba(230,31,157,0.1)] hover:shadow-[0_0_30px_rgba(230,31,157,0.3)]';
+    if (reward.name.includes('Legendary') || reward.type === 'Jackpot') return 'border-brand-season-primary/20 hover:border-brand-season-primary/60 shadow-[0_0_20px_rgb(var(--color-season-primary)/0.1)] hover:shadow-[0_0_30px_rgb(var(--color-season-primary)/0.3)]';
+    if (reward.name.includes('Epic') || reward.type === 'Artifact') return 'border-brand-secondary/20 hover:border-brand-secondary/60 shadow-[0_0_20px_rgb(var(--color-season-secondary)/0.1)] hover:shadow-[0_0_30px_rgb(var(--color-season-secondary)/0.3)]';
     return 'border-brand-primary/20 hover:border-brand-primary/60 shadow-[0_0_20px_rgba(120,53,229,0.1)] hover:shadow-[0_0_30px_rgba(120,53,229,0.3)]';
   };
 
@@ -124,14 +140,14 @@ export const RewardsGallery: React.FC = () => {
     <section className="py-24 px-4 md:px-8 relative overflow-hidden bg-brand-black">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-brand-season-primary/5 blur-[100px] rounded-full pointer-events-none transition-colors duration-1000"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
           <span className="text-transparent bg-clip-text bg-nft-gradient font-mono text-sm uppercase tracking-widest mb-3 block font-bold">The Vault</span>
           <h2 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-6 tracking-tight">Season Rewards</h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            Exclusive artifacts forged in the Primal Fires. Collect Essence to unlock guaranteed prizes and entry into legendary raffles.
+            Exclusive artifacts forged in the <span className="text-brand-season-primary font-bold">{currentSeason}</span>. Collect Essence to unlock guaranteed prizes and entry into legendary raffles.
           </p>
         </div>
 
@@ -150,7 +166,7 @@ export const RewardsGallery: React.FC = () => {
               <div className="p-5 relative z-20 bg-brand-dark/90 backdrop-blur-xl border-t border-white/5 flex-1 flex flex-col">
                 <div className="mb-2">
                    <h3 className="text-base font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-nft-gradient transition-all font-display leading-tight">
-                    {reward.name}
+                    {reward.name.replace('Magma', currentSeason === 'Water' ? 'Aqua' : currentSeason === 'Wind' ? 'Zephyr' : currentSeason === 'Earth' ? 'Terra' : 'Magma')}
                   </h3>
                 </div>
                 
