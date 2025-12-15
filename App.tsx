@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Hero } from './components/Hero';
 import { Roadmap } from './components/Roadmap';
@@ -15,6 +16,7 @@ const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [currentSeason, setCurrentSeason] = useState<SeasonType>('Fire');
+  const [isInterlude, setIsInterlude] = useState(false); // New state for Interlude simulation
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -154,13 +156,15 @@ const App: React.FC = () => {
         onToggleTheme={toggleTheme}
         currentSeason={currentSeason}
         onSetSeason={setCurrentSeason}
+        isInterlude={isInterlude}
+        onToggleInterlude={() => setIsInterlude(!isInterlude)}
       />
 
       <main>
         {isWalletConnected ? (
-          <Dashboard currentSeason={currentSeason} />
+          <Dashboard currentSeason={currentSeason} isInterlude={isInterlude} />
         ) : (
-          <Hero onConnect={handleConnect} currentSeason={currentSeason} />
+          <Hero onConnect={handleConnect} currentSeason={currentSeason} isInterlude={isInterlude} />
         )}
 
         <div id="roadmap">

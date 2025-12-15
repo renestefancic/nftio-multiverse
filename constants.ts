@@ -8,6 +8,8 @@ export const SEASONS: Season[] = [
     element: 'Fire', 
     status: SeasonStatus.ACTIVE, 
     dateRange: 'Jan 16 - Mar 31',
+    startDate: '2026-01-16T00:00:00',
+    endDate: '2026-03-31T23:59:59',
     color: 'text-orange-500',
     accent: 'border-orange-500 shadow-[0_0_30px_rgba(255,85,0,0.15)]',
     highlights: ['Magma Blob', 'Eternal Embers', 'Infernal Degen']
@@ -18,6 +20,8 @@ export const SEASONS: Season[] = [
     element: 'Water', 
     status: SeasonStatus.LOCKED, 
     dateRange: 'Apr 13 - Jun 30',
+    startDate: '2026-04-13T00:00:00',
+    endDate: '2026-06-30T23:59:59',
     color: 'text-blue-500',
     accent: 'border-blue-500',
     highlights: ['Coral Blob', 'Seafoam Amulet', 'Tidalborne Degen']
@@ -28,6 +32,8 @@ export const SEASONS: Season[] = [
     element: 'Wind', 
     status: SeasonStatus.LOCKED, 
     dateRange: 'Jul 13 - Sep 30',
+    startDate: '2026-07-13T00:00:00',
+    endDate: '2026-09-30T23:59:59',
     color: 'text-cyan-200',
     accent: 'border-cyan-200',
     highlights: ['Zephyr Blob', 'Windstruck Tome', 'Stormborne Degen']
@@ -38,6 +44,8 @@ export const SEASONS: Season[] = [
     element: 'Earth', 
     status: SeasonStatus.LOCKED, 
     dateRange: 'Oct 9 - Dec 18',
+    startDate: '2026-10-09T00:00:00',
+    endDate: '2026-12-18T23:59:59',
     color: 'text-emerald-500',
     accent: 'border-emerald-500',
     highlights: ['Moss Blob', 'Bedrock Helm', 'Stoneborne Degen']
@@ -50,13 +58,16 @@ export const GAMES: Game[] = [
     name: 'The Etherscape',
     coverImage: 'https://picsum.photos/seed/etherscape/400/300',
     description: 'A dark fantasy dungeon crawler. Explore the depths.',
+    playUrl: 'https://etherscape.io/play',
     guideUrl: 'https://enjin.io/help-center',
     objectives: [
-      { id: 'o1', title: 'Daily Login', description: 'Log in to the game server.', points: 5, isCompleted: true, ctaText: 'Launch' },
-      { id: 'o2', title: 'Complete Floor 1', description: 'Clear the first floor of the dungeon.', points: 25, isCompleted: true, ctaText: 'Enter' },
-      { id: 'o3', title: 'Find Rare Gem', description: 'Loot a rare gem from a chest.', points: 50, isCompleted: false, ctaText: 'Search' },
-      { id: 'o4', title: 'Defeat 50 Skeletons', description: 'Eliminate skeleton warriors.', points: 40, isCompleted: false, ctaText: 'Hunt' },
-      { id: 'o5', title: 'Craft Potion', description: 'Brew a health potion.', points: 10, isCompleted: false, ctaText: 'Craft' }
+      { id: 'o1', seasonId: 'Fire', title: 'Daily Login', description: 'Log in to the game server.', points: 5, isCompleted: true, ctaText: 'Launch' },
+      { id: 'o2', seasonId: 'Fire', title: 'Complete Floor 1', description: 'Clear the first floor of the dungeon.', points: 25, isCompleted: true, ctaText: 'Enter' },
+      { id: 'o3', seasonId: 'Fire', title: 'Find Rare Gem', description: 'Loot a rare gem from a chest.', points: 50, isCompleted: false, ctaText: 'Search' },
+      { id: 'o4', seasonId: 'Fire', title: 'Defeat 50 Skeletons', description: 'Eliminate skeleton warriors.', points: 40, isCompleted: false, ctaText: 'Hunt' },
+      { id: 'o5', seasonId: 'Fire', title: 'Craft Potion', description: 'Brew a health potion.', points: 10, isCompleted: false, ctaText: 'Craft' },
+      // Water Season Future Content
+      { id: 'o6', seasonId: 'Water', title: 'Cross the Lake', description: 'Find the boatman.', points: 20, isCompleted: false, ctaText: 'Travel' }
     ]
   },
   {
@@ -64,13 +75,14 @@ export const GAMES: Game[] = [
     name: 'Lost Relics',
     coverImage: 'https://picsum.photos/seed/relics/400/300',
     description: 'Action-adventure RPG. Hack and slash your way to glory.',
+    playUrl: 'https://lostrelics.io/download',
     guideUrl: 'https://enjin.io/help-center',
     objectives: [
-      { id: 'o1', title: 'Clear Spooky Dungeon', description: 'Complete the level without dying.', points: 30, isCompleted: true, ctaText: 'Enter' },
-      { id: 'o2', title: 'Find Ancient Artifact', description: 'Loot a legendary item from a chest.', points: 50, isCompleted: true, ctaText: 'Search' },
-      { id: 'o3', title: 'Defeat Boss', description: 'Kill the Level 10 Dungeon Boss.', points: 40, isCompleted: true, ctaText: 'Fight' },
-      { id: 'o4', title: 'Collect 100 Gold', description: 'Gather gold coins from fallen enemies.', points: 10, isCompleted: false, ctaText: 'Collect' },
-      { id: 'o5', title: 'Equip Rare Armor', description: 'Wear a full set of Rare quality gear.', points: 50, isCompleted: false, ctaText: 'Equip' }
+      { id: 'o1', seasonId: 'Fire', title: 'Clear Spooky Dungeon', description: 'Complete the level without dying.', points: 30, isCompleted: true, ctaText: 'Enter' },
+      { id: 'o2', seasonId: 'Fire', title: 'Find Ancient Artifact', description: 'Loot a legendary item from a chest.', points: 50, isCompleted: true, ctaText: 'Search' },
+      { id: 'o3', seasonId: 'Fire', title: 'Defeat Boss', description: 'Kill the Level 10 Dungeon Boss.', points: 40, isCompleted: true, ctaText: 'Fight' },
+      { id: 'o4', seasonId: 'Fire', title: 'Collect 100 Gold', description: 'Gather gold coins from fallen enemies.', points: 10, isCompleted: false, ctaText: 'Collect' },
+      { id: 'o5', seasonId: 'Fire', title: 'Equip Rare Armor', description: 'Wear a full set of Rare quality gear.', points: 50, isCompleted: false, ctaText: 'Equip' }
     ]
   },
   {
@@ -78,13 +90,14 @@ export const GAMES: Game[] = [
     name: 'The Six Dragons',
     coverImage: 'https://picsum.photos/seed/dragons/400/300',
     description: 'Open world RPG. Slay dragons, craft items, own the world.',
+    playUrl: 'https://thesixdragons.com',
     guideUrl: 'https://enjin.io/help-center',
     objectives: [
-      { id: 'o1', title: 'Craft a Fire Sword', description: 'Forge a weapon using Ember Steel.', points: 50, isCompleted: true, ctaText: 'Craft' },
-      { id: 'o2', title: 'Slay 10 Goblins', description: 'Defeat 10 Goblin enemies in the Dark Forest.', points: 20, isCompleted: true, ctaText: 'Hunt' },
-      { id: 'o3', title: 'Complete Epic Raid', description: 'Participate in the Molten Core raid.', points: 100, isCompleted: true, ctaText: 'Join Raid' },
-      { id: 'o4', title: 'Trade 5 Items', description: 'Sell or trade items on the marketplace.', points: 9, isCompleted: true, ctaText: 'Trade' },
-      { id: 'o5', title: 'Visit Capital City', description: 'Discover the main hub.', points: 1, isCompleted: true, ctaText: 'Travel' }
+      { id: 'o1', seasonId: 'Fire', title: 'Craft a Fire Sword', description: 'Forge a weapon using Ember Steel.', points: 50, isCompleted: true, ctaText: 'Craft' },
+      { id: 'o2', seasonId: 'Fire', title: 'Slay 10 Goblins', description: 'Defeat 10 Goblin enemies in the Dark Forest.', points: 20, isCompleted: true, ctaText: 'Hunt' },
+      { id: 'o3', seasonId: 'Fire', title: 'Complete Epic Raid', description: 'Participate in the Molten Core raid.', points: 100, isCompleted: true, ctaText: 'Join Raid' },
+      { id: 'o4', seasonId: 'Fire', title: 'Trade 5 Items', description: 'Sell or trade items on the marketplace.', points: 9, isCompleted: true, ctaText: 'Trade' },
+      { id: 'o5', seasonId: 'Fire', title: 'Visit Capital City', description: 'Discover the main hub.', points: 1, isCompleted: true, ctaText: 'Travel' }
     ]
   },
   {
@@ -92,13 +105,14 @@ export const GAMES: Game[] = [
     name: 'ENJ Excavators',
     coverImage: 'https://picsum.photos/seed/excavators/400/300',
     description: 'Strategic mining simulation. Dig deep for fortune.',
+    playUrl: 'https://enjinexcavators.com',
     guideUrl: 'https://enjin.io/help-center',
     objectives: [
-      { id: 'o1', title: 'Upgrade Drill', description: 'Reach level 5 with your main drill.', points: 30, isCompleted: false, ctaText: 'Upgrade' },
-      { id: 'o2', title: 'Find Obsidan', description: 'Extract 10 units of Obsidian.', points: 40, isCompleted: false, ctaText: 'Dig' },
-      { id: 'o3', title: 'Hire Crew', description: 'Recruit a full mining crew.', points: 20, isCompleted: false, ctaText: 'Recruit' },
-      { id: 'o4', title: 'Unlock Region 2', description: 'Gain access to the Magma Core.', points: 50, isCompleted: false, ctaText: 'Travel' },
-      { id: 'o5', title: 'Daily Contract', description: 'Complete a daily guild contract.', points: 10, isCompleted: false, ctaText: 'Contract' }
+      { id: 'o1', seasonId: 'Fire', title: 'Upgrade Drill', description: 'Reach level 5 with your main drill.', points: 30, isCompleted: false, ctaText: 'Upgrade' },
+      { id: 'o2', seasonId: 'Fire', title: 'Find Obsidan', description: 'Extract 10 units of Obsidian.', points: 40, isCompleted: false, ctaText: 'Dig' },
+      { id: 'o3', seasonId: 'Fire', title: 'Hire Crew', description: 'Recruit a full mining crew.', points: 20, isCompleted: false, ctaText: 'Recruit' },
+      { id: 'o4', seasonId: 'Fire', title: 'Unlock Region 2', description: 'Gain access to the Magma Core.', points: 50, isCompleted: false, ctaText: 'Travel' },
+      { id: 'o5', seasonId: 'Fire', title: 'Daily Contract', description: 'Complete a daily guild contract.', points: 10, isCompleted: false, ctaText: 'Contract' }
     ]
   },
   {
@@ -106,13 +120,14 @@ export const GAMES: Game[] = [
     name: 'Into The Multiverse',
     coverImage: 'https://picsum.photos/seed/multiverse/400/300',
     description: 'Sci-fi shooter. Battle across dimensions.',
+    playUrl: 'https://enjin.io',
     guideUrl: 'https://enjin.io/help-center',
     objectives: [
-      { id: 'o1', title: 'Win Deathmatch', description: 'Place 1st in a multiplayer match.', points: 60, isCompleted: false, ctaText: 'Battle' },
-      { id: 'o2', title: 'Capture Flag', description: 'Secure the objective 3 times.', points: 30, isCompleted: false, ctaText: 'Play CTF' },
-      { id: 'o3', title: 'Unlock Laser Rifle', description: 'Purchase the weapon from armory.', points: 40, isCompleted: false, ctaText: 'Shop' },
-      { id: 'o4', title: 'Survive Waves', description: 'Survive 10 waves of aliens.', points: 40, isCompleted: false, ctaText: 'Survival' },
-      { id: 'o5', title: 'Customize Avatar', description: 'Change your suit color.', points: 10, isCompleted: false, ctaText: 'Customize' }
+      { id: 'o1', seasonId: 'Fire', title: 'Win Deathmatch', description: 'Place 1st in a multiplayer match.', points: 60, isCompleted: false, ctaText: 'Battle' },
+      { id: 'o2', seasonId: 'Fire', title: 'Capture Flag', description: 'Secure the objective 3 times.', points: 30, isCompleted: false, ctaText: 'Play CTF' },
+      { id: 'o3', seasonId: 'Fire', title: 'Unlock Laser Rifle', description: 'Purchase the weapon from armory.', points: 40, isCompleted: false, ctaText: 'Shop' },
+      { id: 'o4', seasonId: 'Fire', title: 'Survive Waves', description: 'Survive 10 waves of aliens.', points: 40, isCompleted: false, ctaText: 'Survival' },
+      { id: 'o5', seasonId: 'Fire', title: 'Customize Avatar', description: 'Change your suit color.', points: 10, isCompleted: false, ctaText: 'Customize' }
     ]
   },
 ];

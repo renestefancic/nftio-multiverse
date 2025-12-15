@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Flame, Droplets, Wind, Mountain, Sun, Moon } from 'lucide-react';
+import { Flame, Droplets, Wind, Mountain, Sun, Moon, Hourglass } from 'lucide-react';
 import { SeasonType } from '../App';
 
 interface CampaignHeaderProps {
@@ -8,6 +9,8 @@ interface CampaignHeaderProps {
   onToggleTheme: () => void;
   currentSeason: SeasonType;
   onSetSeason: (season: SeasonType) => void;
+  isInterlude?: boolean;
+  onToggleInterlude?: () => void;
 }
 
 export const CampaignHeader: React.FC<CampaignHeaderProps> = ({ 
@@ -15,7 +18,9 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({
   theme, 
   onToggleTheme,
   currentSeason,
-  onSetSeason
+  onSetSeason,
+  isInterlude,
+  onToggleInterlude
 }) => {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -47,6 +52,13 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({
              {getSeasonIcon()}
              <span className="text-[10px] font-bold text-brand-season-primary uppercase tracking-wider">Season: {currentSeason}</span>
           </div>
+
+          {isInterlude && (
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 animate-pulse">
+             <Hourglass className="w-3 h-3 text-purple-400" />
+             <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">Season Concluded</span>
+          </div>
+          )}
         </div>
 
         {/* Local Navigation Anchors & Theme Toggle */}
@@ -98,6 +110,16 @@ export const CampaignHeader: React.FC<CampaignHeaderProps> = ({
                 <option value="Wind">Wind</option>
                 <option value="Earth">Earth</option>
               </select>
+              
+              {onToggleInterlude && (
+                <button
+                  onClick={onToggleInterlude}
+                  className={`p-1.5 rounded border transition-colors ${isInterlude ? 'bg-purple-500/20 border-purple-500 text-purple-400' : 'bg-black/20 border-white/10 text-gray-500 hover:text-white'}`}
+                  title="Toggle Interlude Mode"
+                >
+                  <Hourglass className="w-3 h-3" />
+                </button>
+              )}
            </div>
 
           <div className="h-4 w-px bg-white/10 mx-2"></div>

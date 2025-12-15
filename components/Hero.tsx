@@ -1,29 +1,49 @@
+
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Wallet, Flame, Sparkles, Droplets, Wind, Mountain } from 'lucide-react';
+import { ChevronDown, Wallet, Flame, Sparkles, Droplets, Wind, Mountain, Loader2 } from 'lucide-react';
 import { SeasonType } from '../App';
+import { SEASONS } from '../constants';
 
 interface HeroProps {
   onConnect: () => void;
   currentSeason: SeasonType;
+  isInterlude?: boolean;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason }) => {
+export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason, isInterlude = false }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    // Dynamic countdown target based on season for fun demo effect
-    let targetDate = '2026-03-31T23:59:59';
-    if (currentSeason === 'Water') targetDate = '2026-06-30T23:59:59';
-    if (currentSeason === 'Wind') targetDate = '2026-09-30T23:59:59';
-    if (currentSeason === 'Earth') targetDate = '2026-12-18T23:59:59';
+    // Determine the target date based on interlude status using shared constants
+    const seasonData = SEASONS.find(s => s.name === currentSeason);
+    const currentIndex = SEASONS.findIndex(s => s.name === currentSeason);
+    const nextSeason = SEASONS[(currentIndex + 1) % SEASONS.length];
+
+    let targetDateStr = seasonData?.endDate || '';
     
-    const target = new Date(targetDate).getTime();
+    // If we are in interlude (drawing period), we count down to the START of the next season
+    if (isInterlude) {
+      targetDateStr = nextSeason?.startDate || '';
+    }
+    
+    const target = new Date(targetDateStr).getTime();
     
     const calculateTime = () => {
       const now = new Date().getTime();
       const distance = target - now;
       
-      if (distance < 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      // If date is passed (which it is for mock dates), we'd typically handle this. 
+      // For this demo, we can just let it show 0 or calculate relative distance for visual effect if we wanted.
+      // But adhering to the previous logic which seemed to work for the user's specific context/screenshot:
+      if (distance < 0) {
+          // Fallback or "00" logic could go here, but allowing standard calculation 
+          // or Math.abs() like in Dashboard if we want it to always show time remaining "as if" future
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          return { days: Math.abs(days), hours: Math.abs(hours), minutes: Math.abs(minutes), seconds: Math.abs(seconds) };
+      }
       
       return {
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -39,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason }) => {
       setTimeLeft(calculateTime());
     }, 1000);
     return () => clearInterval(interval);
-  }, [currentSeason]);
+  }, [currentSeason, isInterlude]);
 
   const getSeasonAssets = () => {
     switch (currentSeason) {
@@ -117,9 +137,11 @@ export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason }) => {
       <div className="relative z-10 max-w-7xl mx-auto px-6 text-center flex flex-col items-center">
         
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 mb-10 px-5 py-2 rounded-full bg-brand-season-primary/5 border border-brand-season-primary/20 backdrop-blur-md shadow-[0_0_30px_rgb(var(--color-season-primary)/0.15)] animate-float transition-colors duration-500">
-          {assets.icon}
-          <span className="text-brand-season-primary font-bold text-sm tracking-[0.2em] uppercase transition-colors duration-500">Season of {currentSeason}</span>
+        <div className={`inline-flex items-center gap-2 mb-10 px-5 py-2 rounded-full border backdrop-blur-md shadow-[0_0_30px_rgb(var(--color-season-primary)/0.15)] animate-float transition-colors duration-500 ${isInterlude ? 'bg-purple-500/10 border-purple-500/30' : 'bg-brand-season-primary/5 border-brand-season-primary/20'}`}>
+          {isInterlude ? <Loader2 className="w-4 h-4 text-purple-400 animate-spin" /> : assets.icon}
+          <span className={`font-bold text-sm tracking-[0.2em] uppercase transition-colors duration-500 ${isInterlude ? 'text-purple-400' : 'text-brand-season-primary'}`}>
+            {isInterlude ? 'Season Concluded' : `Season of ${currentSeason}`}
+          </span>
         </div>
 
         {/* Hero Text */}
@@ -166,8 +188,8 @@ export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason }) => {
 
         {/* Countdown Timer Panel */}
         <div className="w-full max-w-4xl">
-           <div className="glass-panel rounded-3xl p-8 border border-white/10 bg-brand-black/40 backdrop-blur-xl relative overflow-hidden group hover:border-white/20 transition-colors">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-brand-season-primary to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500"></div>
+           <div className={`glass-panel rounded-3xl p-8 border ${isInterlude ? 'border-purple-500/30 shadow-[0_0_30px_rgba(168,85,247,0.1)]' : 'border-white/10'} bg-brand-black/40 backdrop-blur-xl relative overflow-hidden group hover:border-white/20 transition-colors`}>
+              <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent ${isInterlude ? 'via-purple-500' : 'via-brand-season-primary'} to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500`}></div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {[
@@ -187,7 +209,17 @@ export const Hero: React.FC<HeroProps> = ({ onConnect, currentSeason }) => {
                 ))}
               </div>
            </div>
-           <p className="text-center text-xs text-gray-600 mt-4 uppercase tracking-widest font-bold">Until Season Ends</p>
+           
+           <div className="text-center mt-4 uppercase tracking-widest font-bold flex items-center justify-center gap-2 animate-in fade-in duration-500">
+              {isInterlude ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-400" />
+                  <span className="text-xs text-purple-400 font-mono tracking-widest">Drawing In Progress • Season Begins In</span>
+                </>
+              ) : (
+                <span className="text-xs text-gray-600">Until Season Ends</span>
+              )}
+           </div>
         </div>
 
       </div>

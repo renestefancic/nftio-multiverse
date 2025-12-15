@@ -11,6 +11,8 @@ export interface Season {
   element: 'Fire' | 'Water' | 'Wind' | 'Earth';
   status: SeasonStatus;
   dateRange: string;
+  startDate: string; // ISO format for logic
+  endDate: string;   // ISO format for logic
   color: string;
   accent: string;
   highlights: string[];
@@ -18,11 +20,13 @@ export interface Season {
 
 export interface QuestObjective {
   id: string;
+  seasonId: string; // Added for filtering
   title: string;
   description: string;
   points: number;
   isCompleted?: boolean;
   ctaText?: string;
+  ctaUrl?: string; // Optional deep link
 }
 
 export interface Game {
@@ -31,6 +35,7 @@ export interface Game {
   coverImage: string;
   description: string;
   objectives: QuestObjective[];
+  playUrl: string; // Added for the Launch button
   guideUrl?: string;
 }
 

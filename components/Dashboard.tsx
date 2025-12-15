@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
-import { GAMES, MOCK_PLAYER_PROGRESS } from '../constants';
+import { GAMES, MOCK_PLAYER_PROGRESS, SEASONS } from '../constants';
 import { Leaderboard } from './Leaderboard';
 import { ActivityFeed } from './ActivityFeed';
-import { Info, ChevronDown, Check, ArrowRight, BookOpen, Lock, Trophy, Gift, Target, Flame, Droplets, Wind, Mountain } from 'lucide-react';
+import { Info, ChevronDown, Check, ArrowRight, BookOpen, Lock, Trophy, Gift, Target, Flame, Droplets, Wind, Mountain, CalendarOff, Hourglass, Loader2 } from 'lucide-react';
 import { SeasonType } from '../App';
 
 // Simple Identicon Generator Component
@@ -36,32 +37,44 @@ const PixelAvatar: React.FC<{ address: string }> = ({ address }) => {
 
 interface DashboardProps {
   currentSeason: SeasonType;
+  isInterlude?: boolean;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ currentSeason, isInterlude = false }) => {
   const [expandedGameId, setExpandedGameId] = useState<string | null>(null);
   const [expandedRewardId, setExpandedRewardId] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState('');
+  const [nextSeasonName, setNextSeasonName] = useState('');
 
   // Seasonal Countdown
   useEffect(() => {
-    let targetDate = '2026-03-31T23:59:59';
-    if (currentSeason === 'Water') targetDate = '2026-06-30T23:59:59';
-    if (currentSeason === 'Wind') targetDate = '2026-09-30T23:59:59';
-    if (currentSeason === 'Earth') targetDate = '2026-12-18T23:59:59';
+    const currentSeasonData = SEASONS.find(s => s.name === currentSeason);
+    const currentIndex = SEASONS.findIndex(s => s.name === currentSeason);
+    const nextSeason = SEASONS[(currentIndex + 1) % SEASONS.length];
+    
+    // Set next season name for the UI
+    setNextSeasonName(nextSeason?.name || 'Unknown');
 
-    const target = new Date(targetDate).getTime();
+    // If interlude, count down to next season start. If active, count down to current season end.
+    const targetDateString = isInterlude ? nextSeason.startDate : currentSeasonData?.endDate;
+    const target = new Date(targetDateString || '').getTime();
+
     const interval = setInterval(() => {
-      const now = new Date().getTime();
+      const now = new Date().getTime(); // In a real app this would be checking against the server time or simulated dev time
+      
+      // For demo purposes, we are just calculating distance from the target constant
+      // Note: Since the dates in constants are fixed in 2026, and Date.now() is 2024/2025, this math will be large. 
+      // In a real implementation we would clamp or assume the current date is close. 
+      // For this visual demo, we will calculate based on the target.
       const distance = target - now;
       
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       
-      setTimeLeft(`${days}d ${hours}h`);
+      setTimeLeft(`${Math.abs(days)}d ${Math.abs(hours)}h`);
     }, 1000); 
     return () => clearInterval(interval);
-  }, [currentSeason]);
+  }, [currentSeason, isInterlude]);
   
   // Stats Calculations
   const totalEssence = MOCK_PLAYER_PROGRESS.reduce((acc, curr) => acc + curr.currentEssence, 0);
@@ -168,7 +181,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
           
           {/* 1. Identity Card */}
           <div className="glass-panel rounded-2xl p-5 relative overflow-hidden group flex flex-col items-center text-center border-brand-surface bg-brand-dark/40">
-            <div className="absolute top-0 left-0 right-0 h-1 bg-season-gradient"></div>
+            <div className={`absolute top-0 left-0 right-0 h-1 ${isInterlude ? 'bg-gray-600' : 'bg-season-gradient'}`}></div>
             
             <div className="w-full flex flex-col items-center gap-6">
                {/* Profile Info - Now on Top */}
@@ -185,7 +198,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                {/* Essence Stats - Now Below */}
                <div className="flex flex-col items-center relative">
                  <span className="text-[10px] text-brand-season-secondary font-bold uppercase tracking-[0.2em] mb-1 opacity-80">Your Essence</span>
-                 <span className="text-5xl font-display font-black text-transparent bg-clip-text bg-season-gradient drop-shadow-xl leading-none">
+                 <span className={`text-5xl font-display font-black text-transparent bg-clip-text drop-shadow-xl leading-none ${isInterlude ? 'bg-gradient-to-b from-white to-gray-500' : 'bg-season-gradient'}`}>
                    {totalEssence}
                  </span>
                  <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mt-4"></div>
@@ -200,18 +213,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                   <Gift className="w-3.5 h-3.5 text-brand-season-secondary" />
                   REWARDS
                 </h3>
-                <div className="group relative">
-                  <Info className="w-3.5 h-3.5 text-gray-500 cursor-help hover:text-white transition-colors" />
-                  {/* Tooltip */}
-                  <div className="absolute right-0 bottom-full mb-2 w-56 p-3 bg-brand-black border border-white/10 rounded-xl text-xs text-gray-300 shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[60]">
-                    Rewards are unlocked by earning Essence and playing multiple games. Click items to see requirements.
-                  </div>
-                </div>
+                {isInterlude && <span className="text-[9px] bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 px-1.5 py-0.5 rounded font-bold animate-pulse">DISTRIBUTING</span>}
               </div>
               
               <div className="space-y-2">
                 {REWARD_TRACKER.map((item) => {
                   const isItemExpanded = expandedRewardId === item.id;
+                  const isRaffleAndInterlude = isInterlude && item.type === 'raffle';
                   
                   return (
                     <div 
@@ -235,19 +243,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          {item.unlocked && (
-                            <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
-                              item.type === 'raffle' 
-                              ? 'bg-brand-season-accent/10 text-brand-season-accent border-brand-season-accent/20' 
-                              : 'bg-brand-season-primary/10 text-brand-season-primary border-brand-season-primary/20'
-                            }`}>
-                                {item.type === 'raffle' ? 'DRAW ENTRY' : 'UNLOCKED'}
-                            </span>
-                          )}
-                          {!item.unlocked && item.type === 'raffle' && (
-                             <span className="text-[9px] bg-white/5 px-1.5 py-0.5 rounded text-gray-500 border border-white/5 uppercase tracking-wide">
-                                Draw
+                          {isRaffleAndInterlude ? (
+                             <span className="flex items-center gap-1 text-[9px] bg-brand-surface px-1.5 py-0.5 rounded text-white border border-brand-surface font-bold uppercase tracking-wide animate-pulse">
+                               <Loader2 className="w-2.5 h-2.5 animate-spin" /> DRAWING
                              </span>
+                          ) : (
+                             <>
+                              {item.unlocked && (
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded border ${
+                                  item.type === 'raffle' 
+                                  ? 'bg-brand-season-accent/10 text-brand-season-accent border-brand-season-accent/20' 
+                                  : 'bg-brand-season-primary/10 text-brand-season-primary border-brand-season-primary/20'
+                                }`}>
+                                    {item.type === 'raffle' ? 'DRAW ENTRY' : 'UNLOCKED'}
+                                </span>
+                              )}
+                              {!item.unlocked && item.type === 'raffle' && (
+                                <span className="text-[9px] bg-white/5 px-1.5 py-0.5 rounded text-gray-500 border border-white/5 uppercase tracking-wide">
+                                    Draw
+                                </span>
+                              )}
+                             </>
                           )}
                            <ChevronDown className={`w-3 h-3 text-gray-600 transition-transform duration-300 ${isItemExpanded ? 'rotate-180' : ''}`} />
                         </div>
@@ -297,13 +313,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
           <div className="mb-10">
               <div className="flex items-center justify-between mb-4 px-1">
                 <h2 className="text-xl font-bold flex items-center gap-3 text-white">
-                  Active Quests 
-                  <span className="text-[10px] font-bold text-brand-season-primary bg-brand-season-primary/10 px-2 py-0.5 rounded border border-brand-season-primary/20 tracking-wider uppercase">{currentSeason} SEASON</span>
-                  {timeLeft && (
-                    <span className="text-[10px] font-mono text-gray-500 border border-white/5 px-2 py-0.5 rounded bg-white/5">
-                      ENDS IN <span className="text-gray-300">{timeLeft}</span>
-                    </span>
-                  )}
+                  {isInterlude ? 'Season Concluded' : 'Active Quests'}
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded border tracking-wider uppercase ${isInterlude ? 'bg-gray-700 text-gray-300 border-gray-600' : 'text-brand-season-primary bg-brand-season-primary/10 border-brand-season-primary/20'}`}>
+                    {currentSeason} SEASON
+                  </span>
+                  
+                  <span className={`text-[10px] font-mono border px-2 py-0.5 rounded flex items-center gap-2 ${isInterlude ? 'text-purple-400 border-purple-500/30 bg-purple-500/10' : 'text-gray-500 border-white/5 bg-white/5'}`}>
+                    {isInterlude ? (
+                      <><Loader2 className="w-3 h-3 animate-spin" /> DRAWING PERIOD • {nextSeasonName} STARTS IN <span className="text-white font-bold">{timeLeft}</span></>
+                    ) : (
+                      <>ENDS IN <span className="text-gray-300">{timeLeft}</span></>
+                    )}
+                  </span>
                 </h2>
               </div>
               <div className="space-y-4">
@@ -312,16 +333,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                   const percent = progress ? (progress.currentEssence / progress.maxEssence) * 100 : 0;
                   const isMastered = progress?.isMastered;
                   const isExpanded = expandedGameId === game.id;
+                  
+                  // Filter objectives based on the selected Season
+                  const seasonalObjectives = game.objectives.filter(obj => obj.seasonId === currentSeason);
 
                   return (
                     <div 
                       key={game.id} 
                       className={`relative rounded-xl border transition-all duration-300 overflow-hidden ${
                         isMastered 
-                          ? 'bg-black/20 border-brand-season-secondary/20 opacity-75 grayscale-[0.3]' // Muted completed state
-                          : isExpanded 
-                            ? 'bg-brand-gray border-brand-season-primary/50 shadow-lg shadow-brand-season-primary/5' 
-                            : 'bg-brand-dark border-brand-surface hover:border-brand-season-primary/30'
+                          ? 'bg-black/20 border-brand-season-secondary/20 opacity-75 grayscale-[0.3]' 
+                          : isInterlude
+                            ? 'bg-black/40 border-gray-800' // Darker styling for interlude
+                            : isExpanded 
+                                ? 'bg-brand-gray border-brand-season-primary/50 shadow-lg shadow-brand-season-primary/5' 
+                                : 'bg-brand-dark border-brand-surface hover:border-brand-season-primary/30'
                       }`}
                     >
                       {/* Main Card Header (Clickable) */}
@@ -333,11 +359,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                             <img 
                               src={game.coverImage} 
                               alt={game.name} 
-                              className={`w-12 h-12 rounded-lg object-cover ring-1 ${isMastered ? 'ring-brand-season-secondary/30 grayscale' : 'ring-white/10'}`} 
+                              className={`w-12 h-12 rounded-lg object-cover ring-1 ${isMastered || isInterlude ? 'ring-brand-season-secondary/30 grayscale' : 'ring-white/10'}`} 
                             />
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
-                                <h3 className={`font-bold text-base ${isMastered ? 'text-gray-300' : 'text-white'}`}>{game.name}</h3>
+                                <h3 className={`font-bold text-base ${isMastered || isInterlude ? 'text-gray-400' : 'text-white'}`}>{game.name}</h3>
                                 {isMastered && <Check className="w-4 h-4 text-brand-season-secondary" />}
                                 {game.guideUrl && (
                                   <a 
@@ -355,7 +381,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                               <div className="flex items-center gap-3 mt-2">
                                 <div className="h-2 w-24 sm:w-32 bg-brand-black rounded-full overflow-hidden">
                                   <div 
-                                    className={`h-full transition-all duration-500 ${isMastered ? 'bg-brand-season-secondary/70' : 'bg-season-gradient'}`}
+                                    className={`h-full transition-all duration-500 ${isMastered ? 'bg-brand-season-secondary/70' : isInterlude ? 'bg-gray-600' : 'bg-season-gradient'}`}
                                     style={{ width: `${percent}%` }}
                                   ></div>
                                 </div>
@@ -371,9 +397,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                              <button className="hidden sm:flex w-24 justify-center px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-colors items-center gap-1 bg-brand-season-secondary/5 text-brand-season-secondary/70 border-brand-season-secondary/10 cursor-default">
                                Mastered
                              </button>
+                           ) : isInterlude ? (
+                            <button className="hidden sm:flex w-24 justify-center px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-colors items-center gap-1 bg-white/5 text-gray-500 border-white/5 cursor-not-allowed uppercase tracking-wider">
+                              Closed
+                            </button>
                            ) : (
                              <a 
-                               href="https://placeholder.com"
+                               href={game.playUrl}
                                target="_blank"
                                rel="noopener noreferrer"
                                onClick={(e) => e.stopPropagation()}
@@ -389,34 +419,50 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
                       {/* Accordion Content: Objectives */}
                       <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-[500px] opacity-100 border-t border-brand-surface' : 'max-h-0 opacity-0'}`}>
                         <div className="p-4 bg-black/20 space-y-2">
-                          <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-3 px-1 font-bold">Objectives</p>
-                          {game.objectives.map((obj) => (
-                            <div key={obj.id} className="group flex items-center justify-between p-3 rounded-lg bg-brand-surface/30 hover:bg-brand-surface/60 transition-colors border border-transparent hover:border-white/5">
-                              <div className="flex items-start gap-3">
-                                <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center border ${obj.isCompleted ? 'bg-brand-season-primary/20 text-brand-season-primary border-brand-season-primary/50' : 'bg-transparent border-gray-700'}`}>
-                                  {obj.isCompleted ? <Check className="w-3 h-3" /> : <div className="w-1.5 h-1.5 bg-gray-700 rounded-full" />}
+                          <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-3 px-1 font-bold">
+                            {seasonalObjectives.length > 0 ? 'Season Objectives' : 'No Active Objectives'}
+                          </p>
+                          
+                          {seasonalObjectives.length > 0 ? (
+                            seasonalObjectives.map((obj) => (
+                              <div key={obj.id} className="group flex items-center justify-between p-3 rounded-lg bg-brand-surface/30 hover:bg-brand-surface/60 transition-colors border border-transparent hover:border-white/5">
+                                <div className="flex items-start gap-3">
+                                  <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center border ${obj.isCompleted ? 'bg-brand-season-primary/20 text-brand-season-primary border-brand-season-primary/50' : 'bg-transparent border-gray-700'}`}>
+                                    {obj.isCompleted ? <Check className="w-3 h-3" /> : <div className="w-1.5 h-1.5 bg-gray-700 rounded-full" />}
+                                  </div>
+                                  <div>
+                                    <h4 className={`text-xs font-bold ${obj.isCompleted ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                      {obj.title}
+                                    </h4>
+                                    <p className="text-xs text-gray-400 mt-1">{obj.description}</p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <h4 className={`text-xs font-bold ${obj.isCompleted ? 'text-gray-500 line-through' : 'text-white'}`}>
-                                    {obj.title}
-                                  </h4>
-                                  <p className="text-xs text-gray-400 mt-1">{obj.description}</p>
+                                
+                                <div className="flex items-center gap-4">
+                                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${obj.isCompleted ? 'bg-brand-season-primary/10 text-brand-season-primary' : 'bg-brand-dark text-gray-400'}`}>
+                                    {obj.isCompleted ? obj.points : 0}/{obj.points} PTS
+                                  </span>
+                                  {!obj.isCompleted && (
+                                    isInterlude ? (
+                                      <button className="w-24 justify-center py-1.5 text-[10px] font-bold uppercase tracking-wider bg-gray-800 text-gray-500 rounded flex items-center gap-1 cursor-not-allowed">
+                                        Closed
+                                      </button>
+                                    ) : (
+                                      <button className="w-24 justify-center py-1.5 text-[10px] font-bold uppercase tracking-wider bg-season-gradient text-white rounded transition-all hover:scale-105 flex items-center gap-1 group/btn shadow-lg shadow-brand-season-primary/20">
+                                        {obj.ctaText || "Start"}
+                                        <ArrowRight className="w-2.5 h-2.5 transition-transform group-hover/btn:translate-x-0.5" />
+                                      </button>
+                                    )
+                                  )}
                                 </div>
                               </div>
-                              
-                              <div className="flex items-center gap-4">
-                                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${obj.isCompleted ? 'bg-brand-season-primary/10 text-brand-season-primary' : 'bg-brand-dark text-gray-400'}`}>
-                                  {obj.isCompleted ? obj.points : 0}/{obj.points} PTS
-                                </span>
-                                {!obj.isCompleted && (
-                                  <button className="w-24 justify-center py-1.5 text-[10px] font-bold uppercase tracking-wider bg-season-gradient text-white rounded transition-all hover:scale-105 flex items-center gap-1 group/btn shadow-lg shadow-brand-season-primary/20">
-                                    {obj.ctaText || "Start"}
-                                    <ArrowRight className="w-2.5 h-2.5 transition-transform group-hover/btn:translate-x-0.5" />
-                                  </button>
-                                )}
-                              </div>
+                            ))
+                          ) : (
+                            <div className="flex flex-col items-center justify-center py-6 text-gray-500 gap-2 opacity-60">
+                               <CalendarOff className="w-6 h-6" />
+                               <span className="text-xs">No active quests for {currentSeason} season.</span>
                             </div>
-                          ))}
+                          )}
                         </div>
                       </div>
                     </div>
@@ -433,7 +479,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason }) => {
            </div>
            
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 relative">
+                 {isInterlude && (
+                    <div className="absolute inset-0 z-20 backdrop-blur-[2px] bg-brand-black/40 flex items-center justify-center rounded-2xl border border-white/5">
+                       <div className="bg-brand-black border border-brand-season-primary/30 p-6 rounded-2xl shadow-2xl flex flex-col items-center text-center max-w-sm">
+                          <div className="w-12 h-12 bg-brand-season-primary/20 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                             <Trophy className="w-6 h-6 text-brand-season-primary" />
+                          </div>
+                          <h3 className="text-white font-bold text-lg mb-2">Finalizing Results</h3>
+                          <p className="text-gray-400 text-sm">
+                            The {currentSeason} Season has ended. Our scribes are tabulating the final scores to ensure fairness. Final rankings will be revealed shortly.
+                          </p>
+                       </div>
+                    </div>
+                 )}
                  <div>
                   <Leaderboard currentSeason={currentSeason} />
                  </div>
