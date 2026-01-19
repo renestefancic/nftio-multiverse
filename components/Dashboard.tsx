@@ -212,8 +212,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ currentSeason, isInterlude
                               </div>
                               <div className="mt-3 pt-3 border-t border-white/5">
                                 <p className="text-xs text-gray-200 leading-relaxed">
-                                  <span className="text-brand-season-accent font-black block mb-1 uppercase tracking-tighter text-[10px]">Luck Multiplier: {luckTier.multiplier}</span>
-                                  Your chances increase with every Essence point earned. {totalEssence < 300 ? 'Collect more to boost your luck tier!' : 'You have achieved the max luck tier!'}
+                              
+                                  Your chances increase with every Essence point earned. {totalEssence < 300 ? 'Collect more to increase your chances!' : 'You have achieved the max luck tier!'}
                                 </p>
                                 <div className="mt-2 text-[9px] font-mono text-gray-500 flex justify-between">
                                    <span>Your Entries: {totalEssence}</span>
