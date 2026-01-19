@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { REWARDS } from '../constants';
-import { Lock } from 'lucide-react';
+// Added Check to the imported icons from lucide-react
+import { Lock, Ticket, Zap, Check } from 'lucide-react';
 import { SeasonType } from '../App';
 
 interface RewardsGalleryProps {
@@ -10,7 +12,6 @@ interface RewardsGalleryProps {
 export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason }) => {
   
   const getSeasonColors = (type: string) => {
-    // Map season to hex colors for SVG gradients
     const colors = {
       Fire: { primary: '#FF5500', secondary: '#FF2A00', accent: '#FFD700', dark: '#8B0000' },
       Water: { primary: '#00C2FF', secondary: '#0055FF', accent: '#38BDF8', dark: '#00008B' },
@@ -49,7 +50,6 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
                         M100 30 C150 30 180 70 180 100 C180 140 150 170 100 170 C50 170 20 140 20 100 C20 60 50 30 100 30 Z" 
                     />
                     </path>
-                    {/* Face */}
                     <g>
                     <circle cx="75" cy="90" r="8" fill="#330000" opacity="0.8">
                         <animate attributeName="cy" values="90;88;90" dur="3s" repeatCount="indefinite" />
@@ -57,9 +57,6 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
                     <circle cx="125" cy="90" r="8" fill="#330000" opacity="0.8">
                         <animate attributeName="cy" values="90;92;90" dur="3s" repeatCount="indefinite" />
                     </circle>
-                    {reward.name.includes('Legendary') && (
-                        <path d="M60 60 L75 70 L90 55 L110 70 L125 55 L140 65" fill="none" stroke="#FFD700" strokeWidth="3" className="animate-pulse" />
-                    )}
                     </g>
                 </g>
                 </svg>
@@ -85,7 +82,6 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
                </defs>
                <g className="animate-float" style={{ animationDuration: '8s' }}>
                  <path d="M50 70 L50 140 L100 170 L150 140 L150 70 L100 40 Z" fill="url(#obsidianGradient)" stroke="#4B5563" strokeWidth="2" />
-                 <path d="M100 40 L100 170" stroke="#374151" strokeWidth="2" fill="none" opacity="0.5" />
                  <path d="M60 95 Q100 115 140 95" stroke="url(#visorGradient)" strokeWidth="6" fill="none" strokeLinecap="round" className="animate-pulse shadow-[0_0_15px_#7835E5]" />
                </g>
              </svg>
@@ -96,10 +92,7 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
     if (reward.type === 'Jackpot') {
         return (
           <div className="w-full h-full flex items-center justify-center relative bg-black/60 overflow-hidden group">
-            {/* Background Pattern */}
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-
-            {/* Blurred Content */}
             <div className="relative z-0 opacity-50 blur-xl scale-75 transition-all duration-500 group-hover:blur-md">
                <svg viewBox="0 0 200 200" className="w-56 h-56">
                  <defs>
@@ -114,15 +107,11 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
                  </g>
                </svg>
             </div>
-
-            {/* Lock Overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
                <div className="w-12 h-12 rounded-full bg-brand-dark/80 border border-white/10 flex items-center justify-center backdrop-blur-md mb-3 shadow-xl">
                   <Lock className="w-5 h-5 text-gray-400" />
                </div>
-               <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.2em] bg-black/50 px-3 py-1 rounded border border-white/5 backdrop-blur-sm">
-                 Reveal Pending
-               </span>
+               <span className="text-[10px] font-mono text-gray-400 uppercase tracking-[0.2em] bg-black/50 px-3 py-1 rounded border border-white/5 backdrop-blur-sm">Reveal Pending</span>
             </div>
           </div>
         );
@@ -131,58 +120,56 @@ export const RewardsGallery: React.FC<RewardsGalleryProps> = ({ currentSeason })
   };
 
   const getRarityColor = (reward: any) => {
-    if (reward.name.includes('Legendary') || reward.type === 'Jackpot') return 'border-brand-season-primary/20 hover:border-brand-season-primary/60 shadow-[0_0_20px_rgb(var(--color-season-primary)/0.1)] hover:shadow-[0_0_30px_rgb(var(--color-season-primary)/0.3)]';
-    if (reward.name.includes('Epic') || reward.type === 'Artifact') return 'border-brand-secondary/20 hover:border-brand-secondary/60 shadow-[0_0_20px_rgb(var(--color-season-secondary)/0.1)] hover:shadow-[0_0_30px_rgb(var(--color-season-secondary)/0.3)]';
-    return 'border-brand-primary/20 hover:border-brand-primary/60 shadow-[0_0_20px_rgba(120,53,229,0.1)] hover:shadow-[0_0_30px_rgba(120,53,229,0.3)]';
+    if (reward.name.includes('Legendary') || reward.type === 'Jackpot') return 'border-brand-season-primary/20 hover:border-brand-season-primary/60 shadow-[0_0_20px_rgb(var(--color-season-primary)/0.1)]';
+    if (reward.name.includes('Epic') || reward.type === 'Artifact') return 'border-brand-secondary/20 hover:border-brand-secondary/60 shadow-[0_0_20px_rgb(var(--color-season-secondary)/0.1)]';
+    return 'border-brand-primary/20 hover:border-brand-primary/60 shadow-[0_0_20px_rgba(120,53,229,0.1)]';
   };
 
   return (
     <section className="py-24 px-4 md:px-8 relative overflow-hidden bg-brand-black">
-      {/* Background Ambience */}
       <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-brand-season-primary/5 blur-[100px] rounded-full pointer-events-none transition-colors duration-1000"></div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16">
           <span className="text-transparent bg-clip-text bg-nft-gradient font-mono text-sm uppercase tracking-widest mb-3 block font-bold">The Vault</span>
           <h2 className="text-4xl md:text-5xl font-display font-extrabold text-white mb-6 tracking-tight">Season Rewards</h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">
-            Exclusive artifacts forged in the <span className="text-brand-season-primary font-bold">{currentSeason}</span>. Collect Essence to unlock guaranteed prizes and entry into legendary raffles.
+            Exclusive artifacts forged in the <span className="text-brand-season-primary font-bold">{currentSeason}</span>. Accumulate Essence to boost your raffle odds!
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4">
-          {REWARDS.map((reward) => (
-            <div 
-              key={reward.id} 
-              className={`group relative glass-panel rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 border ${getRarityColor(reward)} flex flex-col`}
-            >
-              {/* Asset Container */}
-              <div className="h-48 relative bg-gradient-to-b from-brand-surface/30 to-transparent flex items-center justify-center overflow-hidden">
-                 {renderAsset(reward)}
-              </div>
+          {REWARDS.map((reward) => {
+            const isRaffle = reward.type === 'Artifact' || reward.type === 'Jackpot';
+            return (
+              <div key={reward.id} className={`group relative glass-panel rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 border ${getRarityColor(reward)} flex flex-col`}>
+                <div className="h-48 relative bg-gradient-to-b from-brand-surface/30 to-transparent flex items-center justify-center overflow-hidden">
+                   {isRaffle && (
+                     <div className="absolute top-3 left-3 z-30 flex items-center gap-1.5 px-2 py-1 rounded bg-brand-season-primary/90 text-white border border-brand-season-primary/50 backdrop-blur-md shadow-lg">
+                        <Ticket className="w-3 h-3" />
+                        <span className="text-[9px] font-black uppercase tracking-tighter">WEIGHTED RAFFLE</span>
+                     </div>
+                   )}
+                   {renderAsset(reward)}
+                </div>
 
-              {/* Content */}
-              <div className="p-5 relative z-20 bg-brand-dark/90 backdrop-blur-xl border-t border-white/5 flex-1 flex flex-col">
-                <div className="mb-2">
-                   <h3 className="text-base font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-nft-gradient transition-all font-display leading-tight">
+                <div className="p-5 relative z-20 bg-brand-dark/90 backdrop-blur-xl border-t border-white/5 flex-1 flex flex-col">
+                  <h3 className="text-base font-bold text-white group-hover:text-brand-season-accent transition-all font-display leading-tight mb-2">
                     {reward.name.replace('Magma', currentSeason === 'Water' ? 'Aqua' : currentSeason === 'Wind' ? 'Zephyr' : currentSeason === 'Earth' ? 'Terra' : 'Magma')}
                   </h3>
-                </div>
-                
-                <p className="text-gray-400 text-xs mb-4 leading-relaxed flex-1">
-                  {reward.description}
-                </p>
-
-                <div className="pt-3 border-t border-white/5 flex flex-col gap-1">
-                  <span className="text-[9px] font-mono text-gray-500 uppercase tracking-wider">Condition</span>
-                  <span className="text-[10px] font-bold text-white bg-white/5 px-2 py-1 rounded border border-white/5 shadow-sm inline-block self-start">
-                    {reward.condition}
-                  </span>
+                  <p className="text-gray-400 text-xs mb-4 leading-relaxed flex-1">{reward.description}</p>
+                  
+                  <div className="pt-3 border-t border-white/5 flex flex-col gap-1.5">
+                    <span className="text-[9px] font-mono text-gray-500 uppercase tracking-wider">How to Win</span>
+                    <div className={`text-[10px] font-bold px-2 py-1 rounded border shadow-sm inline-flex items-center gap-2 ${isRaffle ? 'bg-brand-season-primary/10 border-brand-season-primary/20 text-brand-season-primary' : 'bg-white/5 border-white/5 text-white'}`}>
+                      {isRaffle ? <Zap className="w-3 h-3 animate-pulse" /> : <Check className="w-3 h-3" />}
+                      {isRaffle ? 'Accumulate Essence for Entries' : reward.condition}
+                    </div>
+                    {isRaffle && <p className="text-[8px] text-gray-600 font-medium italic">1 Essence = 1 Ticket. More Essence = Higher Luck Tier.</p>}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
